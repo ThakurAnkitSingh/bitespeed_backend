@@ -1,7 +1,10 @@
 import knex, { Knex } from "knex";
 const knexfile = require("../knexfile");
 
-const db = knex(knexfile.development);
+// Use production config on Render, development locally
+const config =
+  process.env.NODE_ENV === "production" ? "production" : "development";
+const db = knex(knexfile[config]);
 
 // Contact interface for TypeScript
 export interface Contact {
