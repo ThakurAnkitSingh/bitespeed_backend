@@ -1,10 +1,19 @@
 import knex, { Knex } from "knex";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const knexfile = require("../knexfile");
 
 // Use production config on Render, development locally
 const config =
   process.env.NODE_ENV === "production" ? "production" : "development";
-const db = knex(knexfile[config]);
+
+// Validate configuration exists
+if (!knexfile[config]) {
+  console.error(`❌ Database configuration '${config}' not found in knexfile`);
+  console.error(`Available configs: ${Object.keys(knexfile).join(", ")}`);
+  throw new Error(`Database configuration '${config}' not found in knexfile`);
+}
+
+const db = knex(knexfile[config] as any);
 
 // Contact interface for TypeScript
 export interface Contact {
